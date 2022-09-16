@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: springboot-kafka-producer
+  kafka:
+    listener:
+      #\u8BBE\u7F6E\u662F\u5426\u6279\u91CF\u6D88\u8D39\uFF0C\u9ED8\u8BA4 single\uFF08\u5355\u6761\uFF09\uFF0Cbatch\uFF08\u6279\u91CF\uFF09
+      type: single
+    # \u96C6\u7FA4\u5730\u5740
+    bootstrap-servers: 127.0.0.1:9091,127.0.0.1:9092,127.0.0.1:9093
+    # topic\u914D\u7F6E
+    topic: test
+    # \u751F\u4EA7\u8005\u914D\u7F6E
+    producer:
+      # \u91CD\u8BD5\u6B21\u6570
+      retries: 3
+      # \u5E94\u7B54\u7EA7\u522B
+      # acks=0 \u628A\u6D88\u606F\u53D1\u9001\u5230kafka\u5C31\u8BA4\u4E3A\u53D1\u9001\u6210\u529F
+      # acks=1 \u628A\u6D88\u606F\u53D1\u9001\u5230kafka leader\u5206\u533A\uFF0C\u5E76\u4E14\u5199\u5165\u78C1\u76D8\u5C31\u8BA4\u4E3A\u53D1\u9001\u6210\u529F
+      # acks=all \u628A\u6D88\u606F\u53D1\u9001\u5230kafka leader\u5206\u533A\uFF0C\u5E76\u4E14leader\u5206\u533A\u7684\u526F\u672Cfollower\u5BF9\u6D88\u606F\u8FDB\u884C\u4E86\u540C\u6B65\u5C31\u4EFB\u52A1\u53D1\u9001\u6210\u529F
+      acks: all
+      # \u6279\u91CF\u5904\u7406\u7684\u6700\u5927\u5927\u5C0F \u5355\u4F4D byte
+      batch-size: 4096
+      # \u53D1\u9001\u5EF6\u65F6,\u5F53\u751F\u4EA7\u7AEF\u79EF\u7D2F\u7684\u6D88\u606F\u8FBE\u5230batch-size\u6216\u63A5\u6536\u5230\u6D88\u606Flinger.ms\u540E,\u751F\u4EA7\u8005\u5C31\u4F1A\u5C06\u6D88\u606F\u63D0\u4EA4\u7ED9kafka
+      buffer-memory: 33554432
+      # \u5BA2\u6237\u7AEFID
+      client-id: producer1
+      # Key \u5E8F\u5217\u5316\u7C7B
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Value \u5E8F\u5217\u5316\u7C7B
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # \u6D88\u606F\u538B\u7F29\uFF1Anone\u3001lz4\u3001gzip\u3001snappy\uFF0C\u9ED8\u8BA4\u4E3A none\u3002
+      compression-type: gzip
+      properties:
+        #partitioner:
+          #\u6307\u5B9A\u81EA\u5B9A\u4E49\u5206\u533A\u5668
+          #class: top.zysite.hello.kafka.partitioner.MyPartitioner
+        linger:
+          # \u53D1\u9001\u5EF6\u65F6,\u5F53\u751F\u4EA7\u7AEF\u79EF\u7D2F\u7684\u6D88\u606F\u8FBE\u5230batch-size\u6216\u63A5\u6536\u5230\u6D88\u606Flinger.ms\u540E,\u751F\u4EA7\u8005\u5C31\u4F1A\u5C06\u6D88\u606F\u63D0\u4EA4\u7ED9kafka
+          ms: 1000
+        max:
+          block:
+            # KafkaProducer.send() \u548C partitionsFor() \u65B9\u6CD5\u7684\u6700\u957F\u963B\u585E\u65F6\u95F4 \u5355\u4F4D ms
+            ms: 6000
+
+
+
+---
+spring:
+  profiles: p1
+server:
+  port: 7071
